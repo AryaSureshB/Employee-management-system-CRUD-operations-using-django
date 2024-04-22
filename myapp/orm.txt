@@ -1,0 +1,130 @@
+class Employee(models.Model):
+
+    name=models.CharField(max_length=200)
+
+    department=models.CharField(max_length=200)
+
+    salary=models.PositiveIntegerField()
+
+    location=models.CharField(max_length=200)
+
+    email=models.EmailField(max_length=200)
+
+    address=models.CharField(max_length=200)
+
+======orm query for creating a new employee object
+
+>>Employee.objects.create(name="hari",department="sales",salary="40000",location="thrissur",email="abc",address="defg")
+
+======orm query for fetching all movie objects
+
+>>qs=Movie.objects.all()
+
+======orm query to fetching one  movie details
+
+>>qs=Movie.objects.get(id=2)
+
+=====fetch movies whose langyage= malayalam
+
+>>qs=Movie.objects.filter(language= "malayalam")
+
+=====fetch movies whose genre= action
+
+>>qs=Movie.objects.filter(genre="action")
+
+=====fetch movies malayalam family movies
+
+>>qs=Movie.objects.filter(language= "malayalam",genre="family")
+
+=====fetch movies released after 2013
+
+>>qs=Movie.objects.filter(year__gt=2013)
+
+=====fetch movies released after 1987 whose language = malayalam
+
+>>qs=Movie.objects.filter(year__gt=1987,language= "malayalam")
+
+=====field hookups
+>__gt
+<__lt
+>=__gte
+<=__lte
+
+__iexact
+filter all movies whose genre = action
+
+>>qs=Movie.objects.filter(genre__iexact="action")
+
+__icontains
+
+>>qs=Movie.objects.filter(title__icontains="aa")
+
+__in
+===filter all movies whose genre either action or comedy
+
+>>qs=Movie.objects.filter(genre__in=["action","comedy"])
+
+===update orm query
+
+==update runtime of aadu as 190, update director of aadu movie as srk
+
+Movie.objects.filter(id=2).update(run_time="190",director="srk")
+
+====delete orm query
+
+===delete id=6
+
+Movie.objects.filter(id=6).delete()
+
+===fetch all genres
+
+>>qs=Movie.objects.values('genre')
+
+===fetch all genres as a list
+
+>>qs=Movie.objects.values_list('genre')
+
+===fetch all genres as a list---flat
+
+>>qs=Movie.objects.values_list('genre',flat=True)
+
+===fetch all genres as a list---flat--print only unique values
+
+>>qs=Movie.objects.values_list('genre',flat=True).distinct()
+
+===fetch all languages
+
+>>qs=Movie.objects.values_list('language',flat=True).distinct()
+
+====sorting query
+
+>>qs=Movie.objects.all().order_by("run_time")===ascending
+>>qs=Movie.objects.all().order_by("run_time")===descending
+
+=====to take first movie
+
+>>qs=Movie.objects.all().order_by("-run_time").first()
+
+===to take first three movies
+>>qs=Movie.objects.all().order_by("-run_time")[0:3]
+
+===aggregate orm query
+(max,mim,avg,count)
+
+from django.db.models import Max
+
+>>qs=Movie.objects.aggregate(Max('run_time'))
+
+=====================================================
+from django.db.models import Min
+
+>>qs=Movie.objects.aggregate(Min('run_time'))
+
+=======group movies with respect to genre
+
+qs=Movie.objects.values("genre").annotate(summary=Count("genre"))
+
+=======group movies with respect to language
+
+qs=Movie.objects.values("language").annotate(summary=Count("language"))
+
